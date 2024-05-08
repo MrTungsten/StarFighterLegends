@@ -77,9 +77,14 @@ public class GameManagerScript : MonoBehaviour
         enemies = enemies.Concat(GameObject.FindGameObjectsWithTag("EnemySine")).ToArray();
         enemies = enemies.Concat(GameObject.FindGameObjectsWithTag("EnemyDelayed")).ToArray();
 
-        if (Input.GetKeyDown(KeyCode.P))
+        if (Input.GetKeyDown(KeyCode.O) && isGameActive)
         {
             enemies = new GameObject[0];
+        }
+        else if (Input.GetKeyDown(KeyCode.P) && isGameActive)
+        {
+            gameObject.AddComponent<BoxCollider2D>();
+            player.GetComponent<PlayerScript>().HitByObject(gameObject.GetComponent<BoxCollider2D>(), true);
         }
 
         int numOfEnemies = enemies.Length;
@@ -87,9 +92,7 @@ public class GameManagerScript : MonoBehaviour
         if (numOfEnemies == 0 && isGameActive)
         {
             Debug.Log("The player has won!");
-            victory = true;
-            isGameActive = false;
-            GameOver();
+            GameOver(true);
         }
 
         if (Input.GetKeyDown(KeyCode.R))
@@ -113,25 +116,24 @@ public class GameManagerScript : MonoBehaviour
             escapeTimer = 0f;
         }
 
-        if (!isGameActive)
+        if (!isGameActive && !isPlayingAnimation)
         {
-
             if (!hasIncreasedScore)
             {
                 if (SceneManager.GetActiveScene().buildIndex == SceneManager.sceneCountInBuildSettings - 2)
                 {
                     ScoreManagerScript.Instance.IncrementScore(500);
                     ScoreManagerScript.Instance.IncrementScore(PlayerStatsManager.Instance.GetStats()[0] * 50);
-                    ScoreManagerScript.Instance.UpdateScoreText(scoreText, totalScoreText, highScoreText);
                 }
 
-                if (playerLifeTime < scoreTimeLimit)
+                if ( (playerLifeTime < scoreTimeLimit) && victory)
                 {
                     scoreTimeBonus = ((int)((scoreTimeLimit - playerLifeTime) / 5)) * 5;
                     ScoreManagerScript.Instance.IncrementScore(scoreTimeBonus);
                     scoreTimeBonusText.text = $"Time Bonus: {scoreTimeBonus}";
-                    ScoreManagerScript.Instance.UpdateScoreText(scoreText, totalScoreText, highScoreText);
                 }
+
+                ScoreManagerScript.Instance.UpdateScoreText(scoreText, totalScoreText, highScoreText);
 
                 hasIncreasedScore = true;
             }
@@ -154,11 +156,11 @@ public class GameManagerScript : MonoBehaviour
         }
     }
 
-    public void GameOver()
+    public void GameOver(bool _victory = false)
     {
-        isGameActive = false;
-
         gameOverScreen.SetActive(true);
+
+        victory = _victory;
 
         if (victory)
         {
@@ -168,16 +170,20 @@ public class GameManagerScript : MonoBehaviour
         {
             GameOverLoss();
         }
+
+        isGameActive = false;
     }
 
     public void GameActive()
     {
         isGameActive = true;
+        isPlayingAnimation = false;
     }
 
     public void GameInactive()
     {
         isGameActive = false;
+        isPlayingAnimation = true;
     }
 
     private void GameOverWin()
@@ -188,6 +194,7 @@ public class GameManagerScript : MonoBehaviour
     private void GameOverLoss()
     {
         gameOverScreenLoss.SetActive(true);
+        scoreTimeBonusText.enabled = false;
     }
 
     public bool IsGameActive()
@@ -197,7 +204,7 @@ public class GameManagerScript : MonoBehaviour
 
     public void NextLevel()
     {
-        PlayerStatsManager.Instance.ChangeStats();
+        PlayerStatsManager.Instance.UpdatePlayerStats();
         int sceneIndex = SceneManager.GetActiveScene().buildIndex + 1;
         SceneManager.LoadScene(SceneUtility.GetScenePathByBuildIndex(sceneIndex));
     }

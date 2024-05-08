@@ -7,7 +7,7 @@ public class PlayerStatsManager : MonoBehaviour
 
     private GameObject player;
     private static int[] playerStats = null;
-    private int[] defaultStats = new int[] { 20, 1, 2 };
+    private int[] defaultStats = new int[] { 15, 3, 2 };
 
     public static PlayerStatsManager Instance { get; private set; }
 
@@ -74,10 +74,16 @@ public class PlayerStatsManager : MonoBehaviour
             return defaultStats;
     }
 
-    public void ChangeStats()
+    public void UpdatePlayerStats()
     {
         player = GameObject.FindGameObjectWithTag("Player");
         playerStats = player.GetComponent<PlayerScript>().GetStats();
+    }
+
+    public void ChangePlayerStats(int hitpoints, int bombs, int lasers)
+    {
+        player = GameObject.FindGameObjectWithTag("Player");
+        player.GetComponent<PlayerScript>().SetStats(hitpoints, bombs, lasers);
     }
 
     public void SetStats()

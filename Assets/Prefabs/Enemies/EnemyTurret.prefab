@@ -246,7 +246,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 167d1e981f994ac49bbc12b30e48d2c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bullets: {fileID: 1105445300606073453, guid: 736e791af79da5a4e9a4c09c93b5b3db, type: 3}
+  bullets: {fileID: 1105445300606073453, guid: 285c5dc0c098f1c44b450276fc008bce, type: 3}
   spawners:
   - {fileID: 8694314073601352483}
   - {fileID: 1409787730446902232}

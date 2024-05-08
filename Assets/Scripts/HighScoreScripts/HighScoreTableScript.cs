@@ -56,6 +56,10 @@ public class HighScoreTableScript : MonoBehaviour
         }
     }
 
+    // This is for determing whether the game should allow the player to enter a new high score
+    // The first two if statements you can ignore, but how it works is that it sorts the list of high scores
+    // Then it sees if your score was higher than the last score
+    // If there are less than 10 high scores it automatically adds yours
     public bool ReturnValidHighScore()
     {
         if (ScoreManagerScript.Instance == null)
@@ -87,6 +91,9 @@ public class HighScoreTableScript : MonoBehaviour
         }
     }
 
+    // Gets the list of high scores from the Json, then it sorts the list using two for loops
+    // Then it removes the numbers of scores past 10, so there are only 10 high scores
+    // Finally it saves the new list to the Json
     private void SortHighScoreList()
     {
 
@@ -119,6 +126,7 @@ public class HighScoreTableScript : MonoBehaviour
         SetHighScoreJson(highScores);
     }
 
+    // Creates the table by erasing any preexisting table, then creating a new one
     private void CreateHighScoreTable()
     {
         if (highScoreTransformList != null)
@@ -136,6 +144,7 @@ public class HighScoreTableScript : MonoBehaviour
         }
     }
 
+    // Creates a single entry with the high score
     private void CreateHighScoreEntryTransform(HighScoreEntry highScoreEntry, Transform container, List<Transform> transformList)
     {
         float templateHeight = 65f;
@@ -175,6 +184,7 @@ public class HighScoreTableScript : MonoBehaviour
         transformList.Add(entryTransform);
     }
 
+    // Adds a high score to the high score list, then it sorts it and creates a new table
     public void AddHighScoreEntry(int score, string name)
     {
         HighScoreEntry highScoreEntry = new HighScoreEntry { score = score, name = name };
@@ -188,11 +198,13 @@ public class HighScoreTableScript : MonoBehaviour
         CreateHighScoreTable();
     }
 
+    // This is the object that we are saving to the Json file
     private class HighScores
     {
         public List<HighScoreEntry> highScoreEntryList = new List<HighScoreEntry>();
     }
 
+    // This is a single object that holds the name and the score
     [System.Serializable]
     private class HighScoreEntry
     {
@@ -200,6 +212,9 @@ public class HighScoreTableScript : MonoBehaviour
         public string name;
     }
 
+    // Saves the object highScores, which includes the highScoreEntryList, into a Json file
+    // Debug.Log the filepath if you want to have access to the file
+    // Use Application.persistentDataPath, so that it stays consistent across devices
     private void SetHighScoreJson(HighScores highScores)
     {
         string json = JsonUtility.ToJson(highScores);
@@ -209,6 +224,8 @@ public class HighScoreTableScript : MonoBehaviour
         System.IO.File.WriteAllText(filePath, json);
     }
 
+    // Retrieves the highScores object from the Json file
+    // Has a safety where if the Json file doesn't exist, then it creates one
     private HighScores GetHighScoreJson(HighScores highScores)
     {
         string filePath = Application.persistentDataPath + "/HighScoreData.json";

@@ -42,15 +42,15 @@ public class PlayerScript : MonoBehaviour
     private float bombTimer = 0f;
     private float bombCooldown = 0.5f;
     private float laserTimer = 0f;
-    private float laserCooldown = 7f;
+    private float laserCooldown = 3f;
     private float hitpoints;
     private bool hasImmunity = false;
     private int bombCount;
     private int laserCount;
     private bool isLaserOn = false;
     private float laserLifeTime = 2.5f;
-    private float laserDamageTimer = 0.25f;
-    private float laserDamageCooldown = 0.25f;
+    private float laserDamageTimer = 0.1f;
+    private float laserDamageCooldown = 0.1f;
     private float damageMultiplier = 1;
     private float timeStopScale = 0.15f;
     private float activeSlowTimer = 0f;
@@ -193,24 +193,6 @@ public class PlayerScript : MonoBehaviour
             bombTimer += Time.unscaledDeltaTime;
         }
 
-        if (laserTimer >= laserCooldown)
-        {
-            if (Input.GetKeyDown(KeyCode.LeftShift) && gameManagerScript.IsGameActive())
-            {
-                if (laserCount > 0 && isLaserOn != true)
-                {
-                    StartCoroutine(Laser());
-                    laserCount--;
-                    UpdateStats();
-                    laserTimer = 0f;
-                }
-            }
-        }
-        else
-        {
-            laserTimer += Time.unscaledDeltaTime;
-        }
-
         if (isLaserOn)
         {
             hasImmunity = true;
@@ -262,6 +244,23 @@ public class PlayerScript : MonoBehaviour
                     Destroy(results[i].gameObject);
                 }
             }
+        }
+        else if (laserTimer >= laserCooldown)
+        {
+            if (Input.GetKeyDown(KeyCode.LeftShift) && gameManagerScript.IsGameActive())
+            {
+                if (laserCount > 0)
+                {
+                    StartCoroutine(Laser());
+                    laserCount--;
+                    UpdateStats();
+                    laserTimer = 0f;
+                }
+            }
+        }
+        else
+        {
+            laserTimer += Time.unscaledDeltaTime;
         }
 
         if (gameManagerScript.IsGameActive())
@@ -331,6 +330,11 @@ public class PlayerScript : MonoBehaviour
                 PullPowerups();
                 transform.rotation = Quaternion.Euler(0, 0, 0);
             }
+
+            if (isLaserOn)
+            {
+                laser.SetActive(false);
+            }
         }
     }
 
@@ -357,9 +361,9 @@ public class PlayerScript : MonoBehaviour
         screenLayover.GetComponent<Animator>().SetBool("SlowTimeIsOver", true);
     }
 
-    private void HitByObject(Collider2D collision)
+    public void HitByObject(Collider2D collision, bool die = false)
     {
-        if (!hasImmunity && !collision.gameObject.CompareTag("Powerup") && !collision.gameObject.CompareTag("Bomb") && gameManagerScript.IsGameActive())
+        if (!hasImmunity && !collision.gameObject.CompareTag("Powerup") && !collision.gameObject.CompareTag("Bomb") && gameManagerScript.IsGameActive() && !die)
         {
             hitpoints--;
 
@@ -374,10 +378,20 @@ public class PlayerScript : MonoBehaviour
                 GameObject deathAnim = Instantiate(deathExplosion, transform.position, transform.rotation);
                 deathAnim.GetComponent<AudioSource>().volume = 0.4f;
                 gameManagerScript.GameOver();
+                transform.Find("PlayerVisual").gameObject.SetActive(false);
                 Destroy(gameObject, this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length);
             }
 
             StartCoroutine(HitImmunity(2f));
+        }
+        else if (die)
+        {
+            ScreenShakeScript.Instance.Shake(1f, 0.5f);
+            GameObject deathAnim = Instantiate(deathExplosion, transform.position, transform.rotation);
+            deathAnim.GetComponent<AudioSource>().volume = 0.4f;
+            gameManagerScript.GameOver();
+            transform.Find("PlayerVisual").gameObject.SetActive(false);
+            Destroy(gameObject, this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length);
         }
     }
 

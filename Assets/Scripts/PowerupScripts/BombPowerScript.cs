@@ -34,11 +34,6 @@ public class BombPowerScript : MonoBehaviour
     {
         payload.SetActive(true);
         yield return new WaitForSecondsRealtime(payloadDuration);
-        
-        while (Time.timeScale < 1f)
-        {
-            yield return null;
-        }
 
         payload.SetActive(false);
 
@@ -55,11 +50,11 @@ public class BombPowerScript : MonoBehaviour
             float currentRadius = Mathf.Lerp(originalRadius, originalRadius * expansionSize, elapsedTime / (explosionLifetime / 4));
             transform.localScale = new Vector3(1, 1, 0) * currentRadius;
 
-            elapsedTime += Time.deltaTime;
+            elapsedTime += Time.unscaledDeltaTime;
             yield return null;
         }
         
-        yield return new WaitForSeconds(explosionLifetime);
+        yield return new WaitForSecondsRealtime(explosionLifetime);
 
         Destroy(this.gameObject);
     }
@@ -119,7 +114,7 @@ public class BombPowerScript : MonoBehaviour
             }
             else
             {
-                timer += Time.deltaTime;
+                timer += Time.unscaledDeltaTime;
             }
         }
     }

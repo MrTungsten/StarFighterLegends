@@ -73,7 +73,7 @@ SpriteRenderer:
   m_SortingLayerID: -1389756571
   m_SortingLayer: 3
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 7b68e922a62a50d48a694e2350d0e991, type: 3}
+  m_Sprite: {fileID: 21300000, guid: bd54b6d2e82711e43ad786a8fc22b906, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -94,7 +94,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5311837724661967156}
   - component: {fileID: 87399304599979285}
-  - component: {fileID: 2883363719597317973}
+  - component: {fileID: 3474814729984679388}
   - component: {fileID: 7287120276151248692}
   m_Layer: 0
   m_Name: BombPowerup
@@ -112,7 +112,7 @@ Transform:
   m_GameObject: {fileID: 6370584145665215045}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.75, y: 0.75, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5798138440636538276}
@@ -146,8 +146,8 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!61 &2883363719597317973
-BoxCollider2D:
+--- !u!58 &3474814729984679388
+CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -178,19 +178,9 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.040289775, y: 0.0402897}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
+  m_Offset: {x: 0, y: -0.11699939}
   serializedVersion: 2
-  m_Size: {x: 0.8891828, y: 0.947786}
-  m_EdgeRadius: 0
+  m_Radius: 0.6032345
 --- !u!114 &7287120276151248692
 MonoBehaviour:
   m_ObjectHideFlags: 0
