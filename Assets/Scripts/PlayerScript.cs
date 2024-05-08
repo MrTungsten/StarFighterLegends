@@ -13,6 +13,7 @@ public class PlayerScript : MonoBehaviour
     [SerializeField] private GameObject playerBulletSpawner;
     [SerializeField] private GameObject bombPrefab;
     [SerializeField] private GameObject laser;
+    [SerializeField] private GameObject shield;
     [SerializeField] private TextMeshProUGUI bombCountText;
     [SerializeField] private TextMeshProUGUI laserCountText;
     [SerializeField] private TextMeshProUGUI hitpointCountText;
@@ -65,12 +66,18 @@ public class PlayerScript : MonoBehaviour
 
     private void Start()
     {
+
         Time.timeScale = 1f;
 
         transform.position = new Vector3(0, -6, 0);
         transform.rotation = Quaternion.Euler(0, 0, 0);
 
         gameManagerScript = FindAnyObjectByType<GameManagerScript>();
+
+        gameObject.GetComponent<PolygonCollider2D>().enabled = true;
+        gameObject.GetComponent<CircleCollider2D>().enabled = false;
+
+        shield.SetActive(false);
 
         laserCollider = laser.GetComponent<Collider2D>();
         laser.gameObject.SetActive(false);
@@ -150,7 +157,7 @@ public class PlayerScript : MonoBehaviour
         }
 
         List<Collider2D> objectsHit = new List<Collider2D>();
-        int collision = Physics2D.OverlapCollider(GetComponent<Collider2D>(), new ContactFilter2D().NoFilter(), objectsHit);
+        int collision = Physics2D.OverlapCollider(GetComponent<PolygonCollider2D>(), new ContactFilter2D().NoFilter(), objectsHit);
         foreach (Collider2D collider in objectsHit)
         {
             HitByObject(collider);
@@ -335,6 +342,19 @@ public class PlayerScript : MonoBehaviour
             {
                 laser.SetActive(false);
             }
+
+            if (Time.timeScale == 1f)
+            {
+                gameObject.GetComponent<PolygonCollider2D>().enabled = false;
+                gameObject.GetComponent<CircleCollider2D>().enabled = true;
+                shield.SetActive(true);
+            }
+        }
+        else if (!hasImmunity)
+        {
+            gameObject.GetComponent<PolygonCollider2D>().enabled = true;
+            gameObject.GetComponent<CircleCollider2D>().enabled = false;
+            shield.SetActive(false);
         }
     }
 
@@ -399,8 +419,14 @@ public class PlayerScript : MonoBehaviour
     {
         hasImmunity = true;
         playerAnimator.SetBool("HasImmunity", true);
+        gameObject.GetComponent<PolygonCollider2D>().enabled = false;
+        gameObject.GetComponent<CircleCollider2D>().enabled = true;
+        shield.SetActive(true);
         yield return new WaitForSeconds(immuneTime);
         playerAnimator.SetBool("HasImmunity", false);
+        gameObject.GetComponent<PolygonCollider2D>().enabled = true;
+        gameObject.GetComponent<CircleCollider2D>().enabled = false;
+        shield.SetActive(false);
         hasImmunity = false;
     }
 
@@ -433,15 +459,22 @@ public class PlayerScript : MonoBehaviour
 
     private IEnumerator Laser()
     {
+        hasImmunity = true;
         isLaserOn = true;
         laser.gameObject.SetActive(true);
         laserCollider.enabled = true;
+        gameObject.GetComponent<PolygonCollider2D>().enabled = false;
+        gameObject.GetComponent<CircleCollider2D>().enabled = true;
+        shield.SetActive(true);
         playerAnimator.SetBool("LaserIsOn", true);
         yield return new WaitForSecondsRealtime(laserLifeTime);
         hasImmunity = false;
         isLaserOn = false;
         laser.gameObject.SetActive(false);
         laserCollider.enabled = false;
+        gameObject.GetComponent<PolygonCollider2D>().enabled = true;
+        gameObject.GetComponent<CircleCollider2D>().enabled = false;
+        shield.SetActive(false);
         playerAnimator.SetBool("LaserIsOn", false);
     }
 
@@ -496,6 +529,8 @@ public class PlayerScript : MonoBehaviour
         transform.Find("PlayerVisual").gameObject.SetActive(false);
         planeAnimObj.GetComponent<Animator>().SetTrigger("Outro");
         gameManagerScript.isPlayingAnimation = true;
+
+        shield.SetActive(false);
 
         playerWarpDriveAudioSource.clip = playerWarpDriveOutro;
         playerWarpDriveAudioSource.volume = 0.75f;
