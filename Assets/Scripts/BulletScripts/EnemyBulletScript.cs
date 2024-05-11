@@ -24,6 +24,7 @@ public class EnemyBulletScript : MonoBehaviour
     {
         bulletRb = GetComponent<Rigidbody2D>();
         bulletRb.velocity = Vector3.zero;
+        bulletRb.angularVelocity = 0f;
     }
 
     private void Update()

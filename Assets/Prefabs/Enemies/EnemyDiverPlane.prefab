@@ -27,8 +27,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6381656782230921247}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.41, y: -2.21, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 3, y: 3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4829367674600308298}
@@ -106,10 +106,13 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: -0.25, y: 0.125}
-      - {x: 0, y: 0.4}
-      - {x: 0.24, y: 0.125}
-      - {x: 0, y: -0.29906154}
+    - - {x: 0.06817365, y: -0.034560442}
+      - {x: -0.06789255, y: -0.03297472}
+      - {x: -0.17748165, y: -0.10905588}
+      - {x: -0.17755783, y: -0.023000121}
+      - {x: 0.0010080338, y: 0.2097607}
+      - {x: 0.17353867, y: -0.012665749}
+      - {x: 0.17505693, y: -0.101080656}
   m_UseDelaunayMesh: 0
 --- !u!114 &7304478619504215561
 MonoBehaviour:
@@ -124,7 +127,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 413603771214387942}
-  waypoints: []
+  setOfWaypoints: {fileID: 0}
   enemyDiverVisual: {fileID: 8086363574198529754}
   deathExplosion: {fileID: 4491430257218769968, guid: 8108f18ea04e802458681d9949e613bd, type: 3}
 --- !u!1 &8086363574198529754
@@ -151,14 +154,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8086363574198529754}
-  m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.06, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.25, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6744947903302644446}
   m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &3027636387893206244
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -200,7 +203,7 @@ SpriteRenderer:
   m_SortingLayerID: -855269063
   m_SortingLayer: 1
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: ea12597b43b24e144a9ee86e6597103b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 394b5b0edcab9644e883ef25893924dd, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

@@ -18,7 +18,7 @@ public class ScreenShakeScript : MonoBehaviour
     {
         camera = GameObject.Find("Main Camera").GetComponent<Camera>();
         cameraTransform = camera.transform;
-        initialPosition = cameraTransform.localPosition;
+        initialPosition = new Vector3(0, 0, -10);
 
         CreateSingleton();
     }

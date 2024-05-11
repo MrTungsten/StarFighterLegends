@@ -13,29 +13,44 @@ public class EnemyDiverPlaneScript : MonoBehaviour
     private GameObject player;
     private GameManagerScript gameManagerScript;
     private PowerupSpawnerScript powerupSpawnerScript;
-    private Transform[] waypoints;
+    private Transform[] waypointsTransform;
+    private Vector3[] waypoints;
     private bool isDashing = false;
-    private float dashingPower = 13f;
+    private float dashingPower = 20f;
     private float dashTime = 1.5f;
     private float returnSpeed = 5f;
     private float dashingCooldown = 5f;
     private float timer = 0f;
     private int waypointCount = -1;
     private bool isReturning = false;
-    private float hitpoints = 35f;
+    private float hitpoints = 25f;
     private bool hasSpawnedPowerup = false;
     private float rotateSpeed = 1000f;
 
     private void Start()
     {
 
-        waypoints = setOfWaypoints.GetComponentsInChildren<Transform>();
-        Transform[] waypoints2 = waypoints;
-        waypoints = new Transform[waypoints2.Length - 1];
-        for (int i = 1; i < waypoints2.Length; i++)
+        if (setOfWaypoints != null)
         {
-            waypoints[i - 1] = waypoints2[i];
+            waypointsTransform = setOfWaypoints.GetComponentsInChildren<Transform>();
+            Transform[] waypoints2 = waypointsTransform;
+            waypointsTransform = new Transform[waypoints2.Length - 1];
+            for (int i = 1; i < waypoints2.Length; i++)
+            {
+                waypointsTransform[i - 1] = waypoints2[i];
+            }
+
+            waypoints = new Vector3[waypointsTransform.Length];
+            for (int i = 0; i < waypointsTransform.Length; i++)
+            {
+                waypoints[i] = waypointsTransform[i].position;
+            }
         }
+        else
+        {
+            waypoints = new Vector3[] { transform.position };
+        }
+        
 
         gameManagerScript = GameObject.FindAnyObjectByType<GameManagerScript>();
 
@@ -69,13 +84,13 @@ public class EnemyDiverPlaneScript : MonoBehaviour
 
         if (isReturning)
         {
-            Vector3 direction = waypoints[waypointCount].transform.position - transform.position;
+            Vector3 direction = waypoints[waypointCount] - transform.position;
             float angle = Mathf.Atan2(-direction.y, -direction.x) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.Euler(0, 0, angle + 90);
 
-            if (transform.position != waypoints[waypointCount].transform.position)
+            if (transform.position != waypoints[waypointCount])
             {
-                transform.position = Vector2.MoveTowards(transform.position, waypoints[waypointCount].transform.position, returnSpeed * Time.deltaTime);
+                transform.position = Vector2.MoveTowards(transform.position, waypoints[waypointCount], returnSpeed * Time.deltaTime);
             }
             else
             {

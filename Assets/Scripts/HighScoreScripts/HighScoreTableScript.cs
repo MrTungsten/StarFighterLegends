@@ -20,6 +20,8 @@ public class HighScoreTableScript : MonoBehaviour
 
     private void Awake()
     {
+        Time.timeScale = 1f;
+
         instructionText = transform.Find("Table").transform.Find("Text").transform.Find("InstructionsText").GetComponent<TextMeshProUGUI>();
         instructionText.enabled = false;
 

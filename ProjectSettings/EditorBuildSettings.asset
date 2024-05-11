@@ -28,52 +28,37 @@ EditorBuildSettings:
     guid: e9797785323415b4daf64b7479258c75
   - enabled: 1
     path: Assets/Scenes/Level 5.unity
-    guid: 33d5301e2165b4e4e9c74f1d2070ac7d
+    guid: 2cc1f9c301f7d5746b098515e7414848
   - enabled: 1
     path: Assets/Scenes/Level 6.unity
-    guid: f38e54cf0b0f22f418cc13a122571f4f
+    guid: 33d5301e2165b4e4e9c74f1d2070ac7d
   - enabled: 1
     path: Assets/Scenes/Level 7.unity
-    guid: d8800ad7487c9ff4dbf0cc5c52dbcb7f
+    guid: 6ff1bf917786a924a9cfb79aacd8fc80
   - enabled: 1
     path: Assets/Scenes/Level 8.unity
-    guid: d95d2a447de1fd34f87eb7f16bdab339
+    guid: aa3157c8378bcc64b8445ad3529adaa7
   - enabled: 1
     path: Assets/Scenes/Level 9.unity
-    guid: 84ad5788aaf25f2498e4687ae3ef4de7
+    guid: 83c4ab2d134894e40a0d28e3edfac1c1
   - enabled: 1
     path: Assets/Scenes/Level 10.unity
-    guid: d5fe024ce565ebb43bb23b14650c4a98
+    guid: 217d34ff2ced6d74393e65d640d393fe
   - enabled: 1
     path: Assets/Scenes/Level 11.unity
-    guid: d4751d6810c77cb43bdb9428d3148e7e
+    guid: f38e54cf0b0f22f418cc13a122571f4f
   - enabled: 1
     path: Assets/Scenes/Level 12.unity
-    guid: 87bfbc30d8239b24cba65e32b4e14dc7
+    guid: d8800ad7487c9ff4dbf0cc5c52dbcb7f
   - enabled: 1
     path: Assets/Scenes/Level 13.unity
-    guid: 10a3337046739e64786ff40a3050f0f6
+    guid: d95d2a447de1fd34f87eb7f16bdab339
   - enabled: 1
     path: Assets/Scenes/Level 14.unity
-    guid: f733e932f00f3cf49b36acbaa3b54743
+    guid: 84ad5788aaf25f2498e4687ae3ef4de7
   - enabled: 1
     path: Assets/Scenes/Level 15.unity
-    guid: 235e731e850e2f244a53dc96715bcfde
-  - enabled: 1
-    path: Assets/Scenes/Level 16.unity
-    guid: 91f8f2b80cc7ca14bada4a2b94e0a577
-  - enabled: 1
-    path: Assets/Scenes/Level 17.unity
-    guid: 4989c1e05718cbf478be81d4850e1f86
-  - enabled: 1
-    path: Assets/Scenes/Level 18.unity
-    guid: 8933832052a6248459882fd6c3c097c5
-  - enabled: 1
-    path: Assets/Scenes/Level 19.unity
-    guid: e2021f50e1d95e44ca3b8acb426d1939
-  - enabled: 1
-    path: Assets/Scenes/Level 20.unity
-    guid: 5b5c468c0260ade42abb3b9b06d7560d
+    guid: d5fe024ce565ebb43bb23b14650c4a98
   - enabled: 1
     path: Assets/Scenes/Leaderboard.unity
     guid: 47164ffbebb81734da8ae1912ec1a23f
