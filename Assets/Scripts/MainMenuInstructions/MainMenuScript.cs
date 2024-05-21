@@ -27,8 +27,7 @@ public class MainMenuScript : MonoBehaviour
         {
             if (escapeTimer > 3f)
             {
-                Application.Quit();
-                Debug.Log("Quit Game");
+                QuitGame();
             }
             else
             {
@@ -67,6 +66,7 @@ public class MainMenuScript : MonoBehaviour
 
     public void QuitGame()
     {
+        Debug.Log("Quit Game");
         Application.Quit();
     }
 }

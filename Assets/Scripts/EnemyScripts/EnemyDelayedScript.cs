@@ -5,9 +5,11 @@ using UnityEngine;
 public class EnemyDelayedScript : MonoBehaviour
 {
     [SerializeField] private GameObject bullets;
-    [SerializeField] private GameObject[] spawners;
+    [SerializeField] private int spawnerAmount;
     [SerializeField] private GameObject enemyDelayedPlaneVisual;
     [SerializeField] private GameObject deathExplosion;
+    private GameObject[] spawners;
+    private GameObject emptyGameObject;
     private PowerupSpawnerScript powerupSpawnerScript;
     private GameManagerScript gameManagerScript;
     private float hitpoints = 50f;
@@ -15,15 +17,21 @@ public class EnemyDelayedScript : MonoBehaviour
     private float rotateAmount = 0f;
     private float rotationMultiplier = 20f;
     private bool hasSpawnedPowerup = false;
-    private float firingShotDelay = 0.05f;
+    private float firingShotDelay = 0.025f;
     private float shotTimer = 0f;
     private float shotCooldown = 5f;
     private float spawnerRadius = 1f;
 
     private void Start()
     {
-        for (int i = 0; i < spawners.Length; i++)
+        spawners = new GameObject[spawnerAmount];
+        emptyGameObject = new GameObject("EnemyDelayedTurretSpawner");
+        Destroy(emptyGameObject);
+
+        for (int i = 0; i < spawnerAmount; i++)
         {
+            spawners[i] = Instantiate(emptyGameObject, transform.position, transform.rotation);
+            spawners[i].transform.parent = this.transform;
             spawners[i].transform.position = transform.position + new Vector3(Mathf.Cos((360f / spawners.Length) * (i + 1) * Mathf.Deg2Rad), Mathf.Sin((360f / spawners.Length) * (i + 1) * Mathf.Deg2Rad), 0) * spawnerRadius;
             spawners[i].transform.rotation = Quaternion.Euler(0, 0, (360f / spawners.Length) * (i + 1));
         }

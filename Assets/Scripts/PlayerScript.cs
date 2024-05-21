@@ -40,7 +40,7 @@ public class PlayerScript : MonoBehaviour
     private float xBoundary = 14f;
     private float yBoundary = 13.85f;
     private float bulletTimer = 0f;
-    private float bulletCooldown = .1f;
+    private float bulletCooldown = .125f;
     private float bombTimer = 0f;
     private float bombCooldown = 0.5f;
     private float laserTimer = 0f;
@@ -400,7 +400,6 @@ public class PlayerScript : MonoBehaviour
 
             if (hitpoints <= 0)
             {
-                Debug.Log("Player has lost!");
                 ScreenShakeScript.Instance.Shake(1f, 0.5f);
                 GameObject deathAnim = Instantiate(deathExplosion, transform.position, transform.rotation);
                 deathAnim.GetComponent<AudioSource>().volume = 0.4f;

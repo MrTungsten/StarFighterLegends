@@ -151,6 +151,7 @@ public class ScoreManagerScript : MonoBehaviour
         string json = JsonUtility.ToJson(highScores);
         string filePath = Application.persistentDataPath + "/HighScoreData.json";
         System.IO.File.WriteAllText(filePath, json);
+        Debug.Log("Set Json: " + filePath);
     }
 
     private HighScores GetHighScoreJson(HighScores highScores)
@@ -176,6 +177,8 @@ public class ScoreManagerScript : MonoBehaviour
 
             return highScores;
         }
+
+        Debug.Log("Get Json: " + filePath);
     }
 
     private void SortHighScoreList()

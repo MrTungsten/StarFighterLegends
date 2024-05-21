@@ -14,11 +14,12 @@ public class EnemySinePlaneScript : MonoBehaviour
     private GameObject player;
     private float timer = 0f;
     private float bulletCooldown = 4f;
-    private float bulletSpeed = 6f;
+    private float bulletSpeed = 8f;
+    private float sineWaveFrequency = 5f;
     private bool isShooting = false;
-    private int amountOfBullets = 10;
+    private int amountOfBullets = 15;
     private int maxAmountOfBullets = 25;
-    private float bulletFiringDelay = 0.1f;
+    private float bulletFiringDelay = 0.08f;
     private bool hasSpawnedPowerup = false;
     private float hitpoints = 20f;
 
@@ -70,10 +71,10 @@ public class EnemySinePlaneScript : MonoBehaviour
             GameObject spawnedBullet2 = Instantiate(bulletPrefab, planeAimer1.transform.position, planeAimer1.transform.rotation);
             spawnedBullet1.GetComponent<SinusoidalPath>().enabled = true;
             spawnedBullet1.GetComponent<EnemyBulletScript>().SetAutoMove(false);
-            spawnedBullet1.GetComponent<SinusoidalPath>().SetSettings(1, bulletSpeed, 4f, 1.5f);
+            spawnedBullet1.GetComponent<SinusoidalPath>().SetSettings(1, bulletSpeed, sineWaveFrequency, 1.5f);
             spawnedBullet2.GetComponent<SinusoidalPath>().enabled = true;
             spawnedBullet2.GetComponent<EnemyBulletScript>().SetAutoMove(false);
-            spawnedBullet2.GetComponent<SinusoidalPath>().SetSettings(-1, bulletSpeed, 4f, 1.5f);
+            spawnedBullet2.GetComponent<SinusoidalPath>().SetSettings(-1, bulletSpeed, sineWaveFrequency, 1.5f);
             yield return new WaitForSeconds(bulletFiringDelay);
         }
 
@@ -81,6 +82,11 @@ public class EnemySinePlaneScript : MonoBehaviour
         {
             amountOfBullets++;
         }
+
+        if (bulletSpeed < 10f)
+            bulletSpeed += .25f;
+        if (sineWaveFrequency < 7f)
+            sineWaveFrequency += .25f;
 
         isShooting = false;
     }

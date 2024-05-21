@@ -91,7 +91,6 @@ public class GameManagerScript : MonoBehaviour
 
         if (numOfEnemies == 0 && isGameActive)
         {
-            Debug.Log("The player has won!");
             GameOver(true);
         }
 

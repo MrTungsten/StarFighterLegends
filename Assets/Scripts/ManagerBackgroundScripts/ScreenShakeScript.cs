@@ -54,7 +54,7 @@ public class ScreenShakeScript : MonoBehaviour
 
     public void Shake(float duration, float intensity)
     {
-        initialPosition = cameraTransform.localPosition;
+        initialPosition = new Vector3(0, 0, -10);
         shakeDuration = duration;
         shakeIntensity = intensity;
         StartCoroutine(Shaking());

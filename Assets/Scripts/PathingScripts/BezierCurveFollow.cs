@@ -12,6 +12,7 @@ public class BezierCurveFollow : MonoBehaviour
     private float speedModifier = 0.4f;
     private int routeToGo = 0;
     private float tParam = 0;
+    private float rotationSpeed = 250f;
     private Vector2 gameObjectPosition;
     private bool coroutineAllowed = false;
     private bool isActive = false;
@@ -33,26 +34,23 @@ public class BezierCurveFollow : MonoBehaviour
         Vector2 p2 = routes[routeNumber + 2].position;
         Vector2 p3 = routes[routeNumber + 3].position;
 
-        gameObjectPosition = Mathf.Pow(1 - tParam, 3) * p0 +
-                3 * Mathf.Pow(1 - tParam, 2) * tParam * p1 +
-                3 * (1 - tParam) * Mathf.Pow(tParam, 2) * p2 +
-                Mathf.Pow(tParam, 3) * p3;
-        float angle = Mathf.Atan2(gameObjectPosition.y - transform.position.y, gameObjectPosition.x - transform.position.x) * Mathf.Rad2Deg;
-        Quaternion targetRotation = Quaternion.Euler(new Vector3(0, 0, angle + 90));
-        transform.rotation = targetRotation;
-
-        while (tParam < 1)
+        while (tParam <= 1)
         {
             tParam += Time.deltaTime * speedModifier;
+
+            if (routeToGo == 0 && tParam <= 0.25f)
+                rotationSpeed = 99999999999f;
+            else
+                rotationSpeed = 250f;
 
             gameObjectPosition = Mathf.Pow(1 - tParam, 3) * p0 +
                 3 * Mathf.Pow(1 - tParam, 2) * tParam * p1 +
                 3 * (1 - tParam) * Mathf.Pow(tParam, 2) * p2 +
                 Mathf.Pow(tParam, 3) * p3;
 
-            angle = Mathf.Atan2(gameObjectPosition.y - transform.position.y, gameObjectPosition.x - transform.position.x) * Mathf.Rad2Deg;
-            targetRotation = Quaternion.Euler(new Vector3(0, 0, angle + 90));
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 250 * Time.deltaTime);
+            float angle = Mathf.Atan2(gameObjectPosition.y - transform.position.y, gameObjectPosition.x - transform.position.x) * Mathf.Rad2Deg;
+            Quaternion targetRotation = Quaternion.Euler(new Vector3(0, 0, angle + 90));
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
 
             transform.position = gameObjectPosition;
 
@@ -74,11 +72,6 @@ public class BezierCurveFollow : MonoBehaviour
         }
     }
 
-    private void Testing_OnBezierFinish(object sender, EventArgs e)
-    {
-        Debug.Log("Bezier Curve Finished!");
-    }
-
     public void SetRoutes(Transform[] setOfRoutes)
     {
         routes = setOfRoutes;
@@ -87,6 +80,7 @@ public class BezierCurveFollow : MonoBehaviour
     public void ResetVariables()
     {
         transform.gameObject.GetComponent<EnemyPlaneScript>().enabled = false;
+        transform.rotation *= Quaternion.Euler(new Vector3(0, 0, 180));
         coroutineAllowed = false;
         routeToGo = 0;
     }

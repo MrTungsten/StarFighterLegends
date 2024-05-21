@@ -12,7 +12,7 @@ public class EnemyTurretScript : MonoBehaviour
     private PowerupSpawnerScript powerupSpawnerScript;
     private GameManagerScript gameManagerScript;
     private float bulletSpeed = 2.5f;
-    private float rotateSpeed = 125f;
+    private float rotateSpeed = 100f;
     private float rotateAmount = 0f;
     private float rotationMultiplier = 20f;
     private float hitpoints = 75f;

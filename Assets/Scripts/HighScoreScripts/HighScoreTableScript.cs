@@ -221,8 +221,7 @@ public class HighScoreTableScript : MonoBehaviour
     {
         string json = JsonUtility.ToJson(highScores);
         string filePath = Application.persistentDataPath + "/HighScoreData.json";
-        Debug.Log("Successfully set Json!");
-        Debug.Log(filePath);
+        Debug.Log("Set Json: " + filePath);
         System.IO.File.WriteAllText(filePath, json);
     }
 
@@ -236,8 +235,7 @@ public class HighScoreTableScript : MonoBehaviour
         {
             string json = System.IO.File.ReadAllText(filePath);
             highScores = JsonUtility.FromJson<HighScores>(json);
-            Debug.Log("Successfully get Json!");
-            Debug.Log(filePath);
+            Debug.Log("Get Json: " + filePath);
 
             if (highScores == null)
                 highScores = new HighScores();

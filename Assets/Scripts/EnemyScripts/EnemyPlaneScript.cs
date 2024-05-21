@@ -58,13 +58,13 @@ public class EnemyPlaneScript : MonoBehaviour
         switch (shotType)
         {
             case ShotType.normal:
-                hitpoints = 5f;
+                hitpoints = 8f;
                 bulletSpeed = 7f;
                 speed = 5f;
                 break;
             case ShotType.triple:
                 hitpoints = 10f;
-                speed = 3f;
+                speed = 4f;
                 break;
             case ShotType.cross:
                 hitpoints = 15f;
@@ -80,7 +80,7 @@ public class EnemyPlaneScript : MonoBehaviour
 
         if (autoMove)
         {
-            MoveBackAndForth();
+            Movement();
         }
         
         if (gameManagerScript.IsGameActive() && !currentlyFiring && autoFire)
@@ -92,43 +92,6 @@ public class EnemyPlaneScript : MonoBehaviour
             timer = 0f;
         }
 
-    }
-
-    public void HitByObject(float damageDone)
-    {
-        hitpoints -= damageDone;
-
-        StartCoroutine(HitEffect());
-
-        if (hitpoints <= 0 && !hasSpawnedPowerup)
-        {
-            hasSpawnedPowerup = true;
-
-            int randomNum = Random.Range(1, 101);
-
-            if (randomNum <= 5)
-            {
-                powerupSpawnerScript.GetComponent<PowerupSpawnerScript>().SpawnPowerup(transform, "Bomb");
-            }
-            else if (randomNum <= 15)
-            {
-                powerupSpawnerScript.GetComponent<PowerupSpawnerScript>().SpawnPowerup(transform, "Score");
-            }
-
-            ScoreManagerScript.Instance.IncrementScore(gameObject.tag);
-
-            Instantiate(deathExplosion, transform.position, transform.rotation);
-
-            ScreenShakeScript.Instance.Shake(0.3f, 0.2f);
-            Destroy(gameObject);
-        }
-    }
-
-    private IEnumerator HitEffect()
-    {
-        enemyPlaneVisual.GetComponent<SpriteRenderer>().color = Color.red;
-        yield return new WaitForSeconds(0.1f);
-        enemyPlaneVisual.GetComponent<SpriteRenderer>().color = Color.white;
     }
 
     public void FireAtPlayer()
@@ -187,6 +150,7 @@ public class EnemyPlaneScript : MonoBehaviour
         gameObject.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
         GameObject spawnedBullet = Instantiate(bulletPrefab, planeAimer2.transform.position, planeAimer2.transform.rotation);
         spawnedBullet.GetComponent<EnemyBulletScript>().SetSpeed(bulletSpeed);
+        bulletSpeed += .1f;
         currentlyFiring = false;
     }
 
@@ -196,7 +160,7 @@ public class EnemyPlaneScript : MonoBehaviour
         currentlyFiring = true;
         speed = 0.25f;
 
-        for (int i = 0; i < (6 + amountOfTimesFired); i++)
+        for (int i = 0; i < Mathf.Clamp(4 + amountOfTimesFired, 4, 8); i++)
         {
             GameObject spawnedBullet1 = Instantiate(bulletPrefab, planeAimer1.transform.position, planeAimer1.transform.rotation);
             GameObject spawnedBullet2 = Instantiate(bulletPrefab, planeAimer2.transform.position, planeAimer2.transform.rotation);
@@ -204,10 +168,11 @@ public class EnemyPlaneScript : MonoBehaviour
             spawnedBullet1.GetComponent<EnemyBulletScript>().SetSpeed(bulletSpeed);
             spawnedBullet2.GetComponent<EnemyBulletScript>().SetSpeed(bulletSpeed);
             spawnedBullet3.GetComponent<EnemyBulletScript>().SetSpeed(bulletSpeed);
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.25f);
         }
 
         speed = 3f;
+        bulletSpeed += .1f;
         currentlyFiring = false;
     }
 
@@ -222,7 +187,7 @@ public class EnemyPlaneScript : MonoBehaviour
         planeAimer1.transform.Rotate(new Vector3(10, 0, 0), Space.Self);
         planeAimer3.transform.Rotate(new Vector3(-10, 0, 0), Space.Self);
 
-        for (int i = 0; i < (8 + amountOfTimesFired); i++)
+        for (int i = 0; i < Mathf.Clamp(8 + amountOfTimesFired, 8, 14); i++)
         {   
             GameObject spawnedBullet1 = Instantiate(bulletPrefab, planeAimer1.transform.position, planeAimer1.transform.rotation);
             GameObject spawnedBullet3 = Instantiate(bulletPrefab, planeAimer3.transform.position, planeAimer3.transform.rotation);
@@ -232,26 +197,93 @@ public class EnemyPlaneScript : MonoBehaviour
         }
 
         speed = 2f;
+        bulletSpeed += .1f;
         currentlyFiring = false;
     }
 
-    private void MoveBackAndForth()
+    public void HitByObject(float damageDone)
     {
-        if (transform.position.x > xBoundary)
-        {
-            moveDir = -1f;
-        }
-        else if (transform.position.x < -xBoundary)
-        {
-            moveDir = 1f;
-        }
+        hitpoints -= damageDone;
 
+        StartCoroutine(HitEffect());
+
+        if (hitpoints <= 0 && !hasSpawnedPowerup)
+        {
+            hasSpawnedPowerup = true;
+
+            int randomNum = Random.Range(1, 101);
+
+            if (randomNum <= 5)
+            {
+                powerupSpawnerScript.GetComponent<PowerupSpawnerScript>().SpawnPowerup(transform, "Bomb");
+            }
+            else if (randomNum <= 15)
+            {
+                powerupSpawnerScript.GetComponent<PowerupSpawnerScript>().SpawnPowerup(transform, "Score");
+            }
+
+            ScoreManagerScript.Instance.IncrementScore(gameObject.tag);
+
+            Instantiate(deathExplosion, transform.position, transform.rotation);
+
+            ScreenShakeScript.Instance.Shake(0.3f, 0.2f);
+            Destroy(gameObject);
+        }
+    }
+
+    private IEnumerator HitEffect()
+    {
+        enemyPlaneVisual.GetComponent<SpriteRenderer>().color = Color.red;
+        yield return new WaitForSeconds(0.1f);
+        enemyPlaneVisual.GetComponent<SpriteRenderer>().color = Color.white;
+    }
+
+    private void Movement()
+    {
+        if (shotType == ShotType.triple && gameManagerScript.IsGameActive())
+        {
+            if (transform.position.x < (player.transform.position.x - 3f))
+            {
+                if (transform.position.x > xBoundary)
+                {
+                    moveDir = -1f;
+                }
+                else
+                {
+                    moveDir = 1f;
+                }
+            }
+            else if (transform.position.x >= (player.transform.position.x + 3f))
+            {
+                if (transform.position.x < -xBoundary)
+                {
+                    moveDir = 1f;
+                }
+                else
+                {
+                    moveDir = -1f;
+                }
+            }
+        }
+        else
+        {
+            if (transform.position.x > xBoundary)
+            {
+                moveDir = -1f;
+            }
+            else if (transform.position.x < -xBoundary)
+            {
+                moveDir = 1f;
+            }            
+        }
+        
         transform.position += new Vector3(moveDir, 0, 0) * speed * Time.deltaTime;
     }
 
     public void SetAutoFire(bool _autoFire)
     {
         autoFire = _autoFire;
+        timer = 0;
     }
 
     public void SetFireSpeed(float fireSpeed)
