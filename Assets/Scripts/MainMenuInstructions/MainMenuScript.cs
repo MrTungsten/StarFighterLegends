@@ -62,7 +62,7 @@ public class MainMenuScript : MonoBehaviour
         mainMenu.SetActive(false);
         backgroundImage.SetActive(false);
 
-        SceneManager.LoadScene(SceneUtility.GetScenePathByBuildIndex(SceneManager.GetActiveScene().buildIndex + 1));
+        SceneManager.LoadScene("Instructions");
     }
 
     public void QuitGame()

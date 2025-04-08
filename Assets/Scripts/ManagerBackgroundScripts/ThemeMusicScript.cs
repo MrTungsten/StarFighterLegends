@@ -33,13 +33,13 @@ public class ThemeMusicScript : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        string currentSceneName = SceneManager.GetActiveScene().name;
 
-        if (currentSceneIndex == 0)
+        if (currentSceneName.Equals("VideoScreen"))
         {
             Destroy(gameObject);
         }
-        else if (currentSceneIndex == 1 || currentSceneIndex == 2)
+        else if (currentSceneName.Equals("Main Menu") || currentSceneName.Equals("Instructions"))
         {
             if (themeMusicSource.clip != washingOverdriveClip)
             {

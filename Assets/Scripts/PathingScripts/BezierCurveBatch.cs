@@ -19,7 +19,7 @@ public class BezierCurveBatch : MonoBehaviour
     private int shipCount = 1;
     private bool batchActive = true;
     private int numOfActivePlanes = 0;
-    private float chanceOfShooting = 30f;
+    private float chanceOfShooting = 50f;
 
     private void Start()
     {

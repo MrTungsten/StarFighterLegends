@@ -10,6 +10,7 @@ public class BezierCurveFollow : MonoBehaviour
 
     private Transform[] routes;
     private float speedModifier = 0.4f;
+    private float rotateSpeed = 300f;
     private int routeToGo = 0;
     private float tParam = 0;
     private Vector2 gameObjectPosition;
@@ -38,7 +39,7 @@ public class BezierCurveFollow : MonoBehaviour
                 3 * (1 - tParam) * Mathf.Pow(tParam, 2) * p2 +
                 Mathf.Pow(tParam, 3) * p3;
         float angle = Mathf.Atan2(gameObjectPosition.y - transform.position.y, gameObjectPosition.x - transform.position.x) * Mathf.Rad2Deg;
-        Quaternion targetRotation = Quaternion.Euler(new Vector3(0, 0, angle + 90));
+        Quaternion targetRotation = Quaternion.Euler(new Vector3(0, 0, angle + 270));
         transform.rotation = targetRotation;
 
         while (tParam < 1)
@@ -52,7 +53,7 @@ public class BezierCurveFollow : MonoBehaviour
 
             angle = Mathf.Atan2(gameObjectPosition.y - transform.position.y, gameObjectPosition.x - transform.position.x) * Mathf.Rad2Deg;
             targetRotation = Quaternion.Euler(new Vector3(0, 0, angle + 90));
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 250 * Time.deltaTime);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
 
             transform.position = gameObjectPosition;
 

@@ -35,9 +35,9 @@ public class GameManagerScript : MonoBehaviour
 
         player = GameObject.Find("Player");
 
-        sceneIndex = SceneManager.GetActiveScene().buildIndex - 2;
+        sceneIndex = SceneManager.GetActiveScene().buildIndex - 1;
 
-        if (SceneUtility.GetScenePathByBuildIndex(3) == SceneManager.GetActiveScene().path)
+        if (SceneManager.GetActiveScene().name.Equals("Level 1"))
         {
             ScoreManagerScript.Instance.ResetTotalScore();
 
@@ -77,15 +77,8 @@ public class GameManagerScript : MonoBehaviour
         enemies = enemies.Concat(GameObject.FindGameObjectsWithTag("EnemySine")).ToArray();
         enemies = enemies.Concat(GameObject.FindGameObjectsWithTag("EnemyDelayed")).ToArray();
 
-        if (Input.GetKeyDown(KeyCode.O) && isGameActive)
-        {
-            enemies = new GameObject[0];
-        }
-        else if (Input.GetKeyDown(KeyCode.P) && isGameActive)
-        {
-            gameObject.AddComponent<BoxCollider2D>();
-            player.GetComponent<PlayerScript>().HitByObject(gameObject.GetComponent<BoxCollider2D>(), true);
-        }
+        // For debugging purposes for insta win and insta lose
+        // HandleDebugInputs(enemies);
 
         int numOfEnemies = enemies.Length;
 
@@ -120,7 +113,7 @@ public class GameManagerScript : MonoBehaviour
         {
             if (!hasIncreasedScore)
             {
-                if (SceneManager.GetActiveScene().buildIndex == SceneManager.sceneCountInBuildSettings - 2)
+                if (SceneManager.GetActiveScene().buildIndex + 1 == SceneManager.sceneCountInBuildSettings - 1)
                 {
                     ScoreManagerScript.Instance.IncrementScore(500);
                     ScoreManagerScript.Instance.IncrementScore(PlayerStatsManager.Instance.GetStats()[0] * 50);
@@ -145,7 +138,7 @@ public class GameManagerScript : MonoBehaviour
             }
             else if (levelTransTimer <= 0 && !victory)
             {
-                SceneManager.LoadScene(SceneUtility.GetScenePathByBuildIndex(SceneManager.sceneCountInBuildSettings - 1));
+                SceneManager.LoadScene("Leaderboard");
             }
             else
             {
@@ -156,6 +149,30 @@ public class GameManagerScript : MonoBehaviour
         }
     }
 
+    private void HandleDebugInputs(GameObject[] enemies)
+    {
+        if (Input.GetKeyDown(KeyCode.O) && isGameActive)
+        {
+            foreach (GameObject enemy in enemies)
+            {
+                if (enemy != null)
+                {
+                    if (enemy.TryGetComponent<EnemyPlaneScript>(out EnemyPlaneScript script)) script.HitByObject(1000);
+                    if (enemy.TryGetComponent<EnemySinePlaneScript>(out EnemySinePlaneScript script1)) script1.HitByObject(1000);
+                    if (enemy.TryGetComponent<EnemyDiverPlaneScript>(out EnemyDiverPlaneScript script2)) script2.HitByObject(1000);
+                    if (enemy.TryGetComponent<EnemyTurretScript>(out EnemyTurretScript script3)) script3.HitByObject(1000);
+                    if (enemy.TryGetComponent<EnemyDelayedScript>(out EnemyDelayedScript script4)) script4.HitByObject(1000);
+                }
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.P) && isGameActive)
+        {
+            gameObject.AddComponent<BoxCollider2D>();
+            player.GetComponent<PlayerScript>().HitByObject(gameObject.GetComponent<BoxCollider2D>(), true);
+        }
+    }
+
+
     public void GameOver(bool _victory = false)
     {
         gameOverScreen.SetActive(true);
@@ -164,11 +181,12 @@ public class GameManagerScript : MonoBehaviour
 
         if (victory)
         {
-            GameOverWin();
+            gameOverScreenWin.SetActive(true);
         }
         else
         {
-            GameOverLoss();
+            gameOverScreenLoss.SetActive(true);
+            scoreTimeBonusText.enabled = false;
         }
 
         isGameActive = false;
@@ -184,17 +202,6 @@ public class GameManagerScript : MonoBehaviour
     {
         isGameActive = false;
         isPlayingAnimation = true;
-    }
-
-    private void GameOverWin()
-    {
-        gameOverScreenWin.SetActive(true);
-    }
-    
-    private void GameOverLoss()
-    {
-        gameOverScreenLoss.SetActive(true);
-        scoreTimeBonusText.enabled = false;
     }
 
     public bool IsGameActive()
@@ -218,7 +225,7 @@ public class GameManagerScript : MonoBehaviour
 
     public void MainMenu()
     {
-        SceneManager.LoadScene(SceneUtility.GetScenePathByBuildIndex(1));
+        SceneManager.LoadScene("Main Menu");
     }
 
 }

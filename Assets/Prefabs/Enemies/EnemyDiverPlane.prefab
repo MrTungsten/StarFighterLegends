@@ -127,7 +127,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 413603771214387942}
-  setOfWaypoints: {fileID: 0}
+  setOfWaypoints: {fileID: 6402848076842491929, guid: 18af578cd37cc9d4aa3204797d6a33ac, type: 3}
   enemyDiverVisual: {fileID: 8086363574198529754}
   deathExplosion: {fileID: 4491430257218769968, guid: 8108f18ea04e802458681d9949e613bd, type: 3}
 --- !u!1 &8086363574198529754

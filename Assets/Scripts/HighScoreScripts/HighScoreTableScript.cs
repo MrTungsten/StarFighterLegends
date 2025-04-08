@@ -42,7 +42,7 @@ public class HighScoreTableScript : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.LeftControl) && (timer >= delayTime))
         {
-            SceneManager.LoadScene(SceneUtility.GetScenePathByBuildIndex(1));
+            SceneManager.LoadScene("Main Menu");
         }
         else
         {
@@ -101,6 +101,7 @@ public class HighScoreTableScript : MonoBehaviour
 
         highScores = GetHighScoreJson(highScores);
 
+        /*
         for (int i = 0; i < highScores.highScoreEntryList.Count; i++)
         {
             for (int j = i + 1; j < highScores.highScoreEntryList.Count; j++)
@@ -113,16 +114,26 @@ public class HighScoreTableScript : MonoBehaviour
                 }
             }
         }
+        */
 
-        if (highScores.highScoreEntryList.Count > 10)
+        for (int i = 1; i < highScores.highScoreEntryList.Count; i++)
         {
-            for (int i = 0; i < highScores.highScoreEntryList.Count; i++)
+            int insertIndex = i;
+            HighScoreEntry currentValue = highScores.highScoreEntryList[i];
+            int j = i - 1;
+
+            while (j >= 0 && highScores.highScoreEntryList[j].score < currentValue.score)
             {
-                if (i >= 10)
-                {
-                    highScores.highScoreEntryList.RemoveAt(i);
-                }
+                highScores.highScoreEntryList[j + 1] = highScores.highScoreEntryList[j];
+                insertIndex = j;
+                j--;
             }
+            highScores.highScoreEntryList[insertIndex] = currentValue;
+        }
+
+        for (int i = 10; i < highScores.highScoreEntryList.Count; i++)
+        {
+                highScores.highScoreEntryList.RemoveAt(i);
         }
 
         SetHighScoreJson(highScores);

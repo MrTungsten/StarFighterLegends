@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Video;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class VideoPlayerManager : MonoBehaviour
 {
@@ -9,13 +10,20 @@ public class VideoPlayerManager : MonoBehaviour
 
     private void Start()
     {
+        videoPlayer.url = System.IO.Path.Combine(Application.streamingAssetsPath, "StarFighterLegendsIntro.mp4");
         videoPlayer.loopPointReached += EndReached;
-        videoPlayer.Play();
+        StartCoroutine(VideoDelay(3));
     }
 
     private void EndReached(UnityEngine.Video.VideoPlayer vp)
     {
         SceneManager.LoadScene("Main Menu");
+    }
+
+    private IEnumerator VideoDelay(float time)
+    {
+        yield return new WaitForSeconds(time);
+        videoPlayer.Play();
     }
 
 }

@@ -43,7 +43,7 @@ public class BombPowerScript : MonoBehaviour
         float elapsedTime = 0f;
         float originalRadius = explosionCircleCollider.radius;
 
-        AudioSource.PlayClipAtPoint(explosionSound, transform.position, 3f);
+        AudioSource.PlayClipAtPoint(explosionSound, transform.position, 10f);
 
         while (elapsedTime < (explosionLifetime / 2))
         {

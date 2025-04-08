@@ -413,6 +413,9 @@ public class PlayerScript : MonoBehaviour
         }
         else if (die)
         {
+            hitpoints = 0;
+            UpdateStats();
+            hitpointCountText.text = hitpoints + "x";
             ScreenShakeScript.Instance.Shake(1f, 0.5f);
             GameObject deathAnim = Instantiate(deathExplosion, transform.position, transform.rotation);
             deathAnim.GetComponent<AudioSource>().volume = 0.4f;
