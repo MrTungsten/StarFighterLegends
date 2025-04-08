@@ -335,13 +335,17 @@ public class PlayerScript : MonoBehaviour
 
         if (!gameManagerScript.IsGameActive())
         {
+            if (hitpoints > 0)
+            {
+                PullPowerups();
+            }
+
             transform.position = Vector3.MoveTowards(transform.position, new Vector3(0, -6, 0), 10f * Time.deltaTime);
             Vector3 direction = new Vector3(0, -6, 0) - transform.position;
             float angle = Mathf.Atan2(-direction.y, -direction.x) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.Euler(0, 0, angle + 90);
             if (transform.position == new Vector3(0, -6, 0))
             {
-                PullPowerups();
                 transform.rotation = Quaternion.Euler(0, 0, 0);
             }
 
