@@ -53,7 +53,8 @@ public class BezierCurveFollow : MonoBehaviour
 
             angle = Mathf.Atan2(gameObjectPosition.y - transform.position.y, gameObjectPosition.x - transform.position.x) * Mathf.Rad2Deg;
             targetRotation = Quaternion.Euler(new Vector3(0, 0, angle + 90));
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
+            transform.rotation = targetRotation;
+            //transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
 
             transform.position = gameObjectPosition;
 

@@ -6,11 +6,16 @@ using UnityEngine.SceneManagement;
 public class InstructionScreenScript : MonoBehaviour
 {
 
+    private float instructionsTimer = 0.25f;
+
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.LeftControl))
+        if (Time.timeSinceLevelLoadAsDouble > instructionsTimer)
         {
-            SceneManager.LoadScene("Level 1");
+            if (GameInputScript.Instance.PlayerCommands().Equals("blaster"))
+            {
+                SceneManager.LoadScene("Level 1");
+            }
         }
     }
 

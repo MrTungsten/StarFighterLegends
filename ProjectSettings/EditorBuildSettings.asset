@@ -6,9 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/VideoScreen.unity
-    guid: 14234b1d29baf0249904981a1a28fa70
-  - enabled: 1
     path: Assets/Scenes/Main Menu.unity
     guid: 9075adbb95f9c184fb574335b63a736e
   - enabled: 1
@@ -53,4 +50,5 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Leaderboard.unity
     guid: 47164ffbebb81734da8ae1912ec1a23f
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.input.settings: {fileID: 11400000, guid: 587143edb3ea89549beedc29e7e26005, type: 2}

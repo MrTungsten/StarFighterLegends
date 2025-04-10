@@ -40,7 +40,8 @@ public class HighScoreTableScript : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.LeftControl) && (timer >= delayTime))
+
+        if (GameInputScript.Instance.FirePressedThisFrame() && (timer >= delayTime))
         {
             SceneManager.LoadScene("Main Menu");
         }
@@ -56,6 +57,8 @@ public class HighScoreTableScript : MonoBehaviour
                 timer += Time.deltaTime;
             }
         }
+
+
     }
 
     // This is for determing whether the game should allow the player to enter a new high score

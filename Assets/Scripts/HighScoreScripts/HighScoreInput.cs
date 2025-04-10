@@ -17,7 +17,6 @@ public class HighScoreInput : MonoBehaviour
 
     private HighScoreTableScript highScoreTableScript;
     private GameObject table;
-    private Transform playerNameInput;
     private CurrentInitial currentInitial = CurrentInitial.First;
     private GameObject playerFirstInitial;
     private GameObject playerSecondInitial;
@@ -31,16 +30,14 @@ public class HighScoreInput : MonoBehaviour
     private char[] listOfAlphabet = new char[] { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
     private char currentlySelectedChar = 'A';
     private string playerName = "";
-    private float intiialTimer = 0f;
+    private float initialTimer = 0f;
     private float initalScrollCooldown = 0.5f;
     private float scrollTimer = 0f;
     private float scrollCooldown = 0.15f;
 
     private void Awake()
     {
-
-        playerNameInput = transform.Find("NameInputScreen");
-
+        
         highScoreTableScript = GameObject.FindAnyObjectByType<HighScoreTableScript>();
         table = GameObject.Find("Table");
 
@@ -71,68 +68,73 @@ public class HighScoreInput : MonoBehaviour
 
     private void CurrentAlpha()
     {
-
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+        if (GameInputScript.Instance.GetMovementVectorNormalized().y > 0)
         {
-            currentlySelectedChar = GetAlpha(currentlySelectedChar, "previous");
-            UpdateText(currentCharText, false);
-        }
-        else if (Input.GetKey(KeyCode.UpArrow))
-        {
-            if (intiialTimer > initalScrollCooldown)
+            if (GameInputScript.Instance.MovePressedThisFrame())
             {
-                if (scrollTimer > scrollCooldown)
-                {
-                    currentlySelectedChar = GetAlpha(currentlySelectedChar, "previous");
-                    UpdateText(currentCharText, false);
-                    scrollTimer = 0f;
-                }
-                else
-                {
-                    scrollTimer += Time.deltaTime;
-                }
+                currentlySelectedChar = GetAlpha(currentlySelectedChar, "previous");
+                UpdateText(currentCharText, false);
             }
             else
             {
-                intiialTimer += Time.deltaTime;
-            }
-        }
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            currentlySelectedChar = GetAlpha(currentlySelectedChar, "next");
-            UpdateText(currentCharText, false);
-        }
-        else if (Input.GetKey(KeyCode.DownArrow))
-        {
-            if (intiialTimer > initalScrollCooldown)
-            {
-                if (scrollTimer > scrollCooldown)
+                if (initialTimer > initalScrollCooldown)
                 {
-                    currentlySelectedChar = GetAlpha(currentlySelectedChar, "next");
-                    UpdateText(currentCharText, false);
-                    scrollTimer = 0f;
+                    if (scrollTimer > scrollCooldown)
+                    {
+                        currentlySelectedChar = GetAlpha(currentlySelectedChar, "previous");
+                        UpdateText(currentCharText, false);
+                        scrollTimer = 0f;
+                    }
+                    else
+                    {
+                        scrollTimer += Time.deltaTime;
+                    }
                 }
                 else
                 {
-                    scrollTimer += Time.deltaTime;
+                    initialTimer += Time.deltaTime;
                 }
+            }
+        }
+        if (GameInputScript.Instance.GetMovementVectorNormalized().y < 0)
+        {
+            if (GameInputScript.Instance.MovePressedThisFrame())
+            {
+                currentlySelectedChar = GetAlpha(currentlySelectedChar, "next");
+                UpdateText(currentCharText, false);
             }
             else
             {
-                intiialTimer += Time.deltaTime;
+                if (initialTimer > initalScrollCooldown)
+                {
+                    if (scrollTimer > scrollCooldown)
+                    {
+                        currentlySelectedChar = GetAlpha(currentlySelectedChar, "next");
+                        UpdateText(currentCharText, false);
+                        scrollTimer = 0f;
+                    }
+                    else
+                    {
+                        scrollTimer += Time.deltaTime;
+                    }
+                }
+                else
+                {
+                    initialTimer += Time.deltaTime;
+                }
             }
         }
-        else if (Input.GetKeyDown(KeyCode.LeftControl))
+        if (GameInputScript.Instance.FirePressedThisFrame())
         {
             playerName += currentlySelectedChar;
             Debug.Log("Player name: " + playerName);
             UpdateText(currentCharText, true);
         }
-        if (Input.anyKeyDown)
+        if (GameInputScript.Instance.GetMovementVectorNormalized().y == 0)
         {
-            intiialTimer = 0f;
-            scrollTimer = 0f;
-        }
+            initialTimer = 0;
+            scrollTimer = 0;        }
+
     }
 
     private char GetAlpha(char letter, string mode)
@@ -167,7 +169,7 @@ public class HighScoreInput : MonoBehaviour
 
     private void UpdateText(TextMeshProUGUI charToUpdate, bool submission)
     {
-        if (submission == true)
+        if (submission)
         {
 
             currentlySelectedChar = 'A';

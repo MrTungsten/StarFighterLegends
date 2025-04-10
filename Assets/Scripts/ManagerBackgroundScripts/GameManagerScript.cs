@@ -60,7 +60,7 @@ public class GameManagerScript : MonoBehaviour
 
         initialTotalScore = ScoreManagerScript.Instance.GetTotalScore();
 
-        levelText.text = string.Format("Level\n{0}/{1}", SceneManager.GetActiveScene().buildIndex - 2, SceneManager.sceneCountInBuildSettings - 4);
+        levelText.text = string.Format("Level\n{0}/{1}", SceneManager.GetActiveScene().buildIndex - 1, SceneManager.sceneCountInBuildSettings - 3);
     }
 
     private void Update()
@@ -77,18 +77,17 @@ public class GameManagerScript : MonoBehaviour
         enemies = enemies.Concat(GameObject.FindGameObjectsWithTag("EnemySine")).ToArray();
         enemies = enemies.Concat(GameObject.FindGameObjectsWithTag("EnemyDelayed")).ToArray();
 
-        // For debugging purposes for insta win and insta lose
+        // DEBUGGING TOOLS
         // HandleDebugInputs(enemies);
 
         int numOfEnemies = enemies.Length;
 
         if (numOfEnemies == 0 && isGameActive)
         {
-            Debug.Log("The player has won!");
             GameOver(true);
         }
 
-        if (Input.GetKeyDown(KeyCode.L))
+        if (Input.GetKeyDown(KeyCode.R))
         {
             Restart();
         }
@@ -151,7 +150,9 @@ public class GameManagerScript : MonoBehaviour
 
     private void HandleDebugInputs(GameObject[] enemies)
     {
-        if (Input.GetKeyDown(KeyCode.O) && isGameActive)
+        string debugCommand = GameInputScript.Instance.DebugCommand();
+
+        if (GameInputScript.Instance.DebugCommand().Equals("killAll") && isGameActive)
         {
             foreach (GameObject enemy in enemies)
             {
@@ -165,11 +166,23 @@ public class GameManagerScript : MonoBehaviour
                 }
             }
         }
-        else if (Input.GetKeyDown(KeyCode.P) && isGameActive)
+        if (GameInputScript.Instance.DebugCommand().Equals("killSelf") && isGameActive)
         {
             gameObject.AddComponent<BoxCollider2D>();
             player.GetComponent<PlayerScript>().HitByObject(gameObject.GetComponent<BoxCollider2D>(), true);
         }
+        if (GameInputScript.Instance.DebugCommand().Equals("pause"))
+        {
+            if (Time.timeScale != 0)
+            {
+                Time.timeScale = 0;
+            }
+            else
+            {
+                Time.timeScale = 1;
+            }
+        }
+        
     }
 
 

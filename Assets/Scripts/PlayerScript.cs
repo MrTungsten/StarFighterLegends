@@ -56,9 +56,10 @@ public class PlayerScript : MonoBehaviour
     private float damageMultiplier = 1;
     private float timeStopScale = 0.15f;
     private float activeSlowTimer = 0f;
-    private float activeSlowDuration = 5f;
-    private float slowTimeTimer = 10f;
-    private float slowTimeCooldown = 20f;
+    private float activeSlowDuration = 3f;
+    private float slowTimeTimer = 0f;
+    private float slowTimeDefaultCooldown = 5f;
+    private float slowTimeCooldown = 10f;
     private bool slowTimeActive = false;
     private bool makeTrail = false;
     private float makeTrailTimer = 0f;
@@ -87,8 +88,9 @@ public class PlayerScript : MonoBehaviour
         bombTimer = bombCooldown;
         laserTimer = laserCooldown;
 
-        slowTimeTimer = 20f;
+        slowTimeTimer = slowTimeDefaultCooldown;
         cooldownReadyText.enabled = false;
+        filledCooldownBox.fillAmount = slowTimeTimer / slowTimeCooldown;
 
         playerWarpDriveAudioSource = gameObject.AddComponent<AudioSource>();
         playerBulletAudioSource = gameObject.AddComponent<AudioSource>();
@@ -109,29 +111,7 @@ public class PlayerScript : MonoBehaviour
 
     private void Update()
     {
-        Vector2 inputVector = new Vector2 (0, 0);
-
-        if (Input.GetKey(KeyCode.UpArrow))
-        {
-            inputVector.y = 1f;
-        }
-
-        if (Input.GetKey(KeyCode.DownArrow))
-        {
-            inputVector.y = -1f;
-        }
-
-        if (Input.GetKey(KeyCode.LeftArrow))
-        {
-            inputVector.x = -1f;
-        }
-
-        if (Input.GetKey(KeyCode.RightArrow))
-        {
-            inputVector.x = 1f;
-        }
-
-        inputVector = inputVector.normalized;
+        Vector2 inputVector = GameInputScript.Instance.GetMovementVectorNormalized();
 
         if (gameManagerScript.IsGameActive())
         {
@@ -166,7 +146,7 @@ public class PlayerScript : MonoBehaviour
 
         if (bulletTimer >= bulletCooldown)
         {
-            if (Input.GetKey(KeyCode.LeftControl) && !isLaserOn && gameManagerScript.IsGameActive())
+            if (GameInputScript.Instance.PlayerCommands().Equals("blaster") && !isLaserOn && gameManagerScript.IsGameActive())
             {
                 GameObject playerBullet1 = Instantiate(bulletPrefab, playerBulletSpawner.transform.position + new Vector3(-0.15f, 0, 0), transform.rotation);
                 GameObject playerBullet2 = Instantiate(bulletPrefab, playerBulletSpawner.transform.position + new Vector3(0.15f, 0, 0), transform.rotation);
@@ -185,7 +165,7 @@ public class PlayerScript : MonoBehaviour
 
         if (bombTimer >= bombCooldown)
         {
-            if (Input.GetKeyDown(KeyCode.LeftAlt) && gameManagerScript.IsGameActive())
+            if (GameInputScript.Instance.PlayerCommands().Equals("bomb") && gameManagerScript.IsGameActive())
             {
                 if (bombCount > 0)
                 {
@@ -261,7 +241,7 @@ public class PlayerScript : MonoBehaviour
         }
         else if (laserTimer >= laserCooldown)
         {
-            if (Input.GetKeyDown(KeyCode.LeftShift) && gameManagerScript.IsGameActive())
+            if (GameInputScript.Instance.PlayerCommands().Equals("laser") && gameManagerScript.IsGameActive())
             {
                 if (laserCount > 0)
                 {
@@ -283,7 +263,7 @@ public class PlayerScript : MonoBehaviour
             {
                 if (slowTimeTimer > slowTimeCooldown)
                 {
-                    if (Input.GetKeyDown(KeyCode.Space))
+                    if (GameInputScript.Instance.PlayerCommands().Equals("slowTime"))
                     {
                         activeSlowTimer = activeSlowDuration;
                         slowTimeCoroutine = StartCoroutine(SlowTimeEffect());
@@ -404,7 +384,6 @@ public class PlayerScript : MonoBehaviour
 
             if (hitpoints <= 0)
             {
-                Debug.Log("Player has lost!");
                 ScreenShakeScript.Instance.Shake(1f, 0.5f);
                 GameObject deathAnim = Instantiate(deathExplosion, transform.position, transform.rotation);
                 deathAnim.GetComponent<AudioSource>().volume = 0.4f;

@@ -11,6 +11,7 @@ public class MainMenuScript : MonoBehaviour
     [SerializeField] private GameObject mainMenu;
     [SerializeField] private GameObject backgroundImage;
     [SerializeField] private Button playButton;
+    [SerializeField] private Button quitButton;
     private float escapeTimer = 0f;
 
     private void Start()
@@ -19,6 +20,14 @@ public class MainMenuScript : MonoBehaviour
         mainMenu.SetActive(true);
         backgroundImage.SetActive(true);
         playButton.Select();
+        playButton.onClick.AddListener(() => 
+        {
+            PlayGame();
+        });
+        quitButton.onClick.AddListener(() =>
+        {
+            Application.Quit();
+        });
     }
 
     private void Update()
@@ -38,11 +47,6 @@ public class MainMenuScript : MonoBehaviour
         else
         {
             escapeTimer = 0f;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            PlayGame();
         }
     }
 
@@ -65,8 +69,4 @@ public class MainMenuScript : MonoBehaviour
         SceneManager.LoadScene("Instructions");
     }
 
-    public void QuitGame()
-    {
-        Application.Quit();
-    }
 }

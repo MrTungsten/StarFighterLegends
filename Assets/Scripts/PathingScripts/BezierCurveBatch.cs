@@ -12,11 +12,11 @@ public class BezierCurveBatch : MonoBehaviour
     [SerializeField] private float planeDelay = 0.5f;
     [SerializeField] private float batchDelay = 1.5f;
 
-    private Dictionary<int, GameObject> planesOnCurve;
+    private List<GameObject> planesOnCurve;
     private Transform[] setOfRoutesTransform;
     private float planeDelayTimer = 0f;
     private bool isStartingBatch = false;
-    private int shipCount = 1;
+    private int shipCount = 0;
     private bool batchActive = true;
     private int numOfActivePlanes = 0;
     private float chanceOfShooting = 50f;
@@ -41,15 +41,12 @@ public class BezierCurveBatch : MonoBehaviour
     private void BezierCurveFollow_OnBezierFinish(object sender, EventArgs e)
     {
         numOfActivePlanes = 0;
-        for (int i = 1; i < (planesOnCurve.Count + 1); i++)
+        for (int i = 1; i < planesOnCurve.Count; i++)
         {
-            if (planesOnCurve[i] != null)
+            if (planesOnCurve[i].GetComponent<BezierCurveFollow>().IsActive())
             {
-                if (planesOnCurve[i].GetComponent<BezierCurveFollow>().IsActive())
-                {
-                    numOfActivePlanes++;
-                }
-            } 
+                numOfActivePlanes++;
+            }
         }
         if (numOfActivePlanes == 0)
         {
@@ -66,7 +63,7 @@ public class BezierCurveBatch : MonoBehaviour
 
         if (isStartingBatch && batchActive)
         {
-            if ( shipCount < (planesOnCurve.Count + 1) )
+            if ( shipCount < planesOnCurve.Count )
             {
                 if (planeDelayTimer <= 0f)
                 {
@@ -84,37 +81,57 @@ public class BezierCurveBatch : MonoBehaviour
                 }
             }
         }
+
+        if (batchActive)
+        {
+            for (int i = 0; i < planesOnCurve.Count; i++)
+            {
+                if (planesOnCurve[i] == null)
+                {
+                    planesOnCurve.RemoveAt(i);
+                    i--;
+
+                    numOfActivePlanes = 0;
+                    for (int j = 0; j < planesOnCurve.Count; j++)
+                    {
+                        if (planesOnCurve[j].GetComponent<BezierCurveFollow>().IsActive())
+                        {
+                            numOfActivePlanes++;
+                        }
+                    }
+                    if (numOfActivePlanes == 0)
+                    {
+                        StartCoroutine(BezierCurveRest());
+                    }
+                }
+            }
+        }
+        
     }
 
     private void SetUpChildren()
     {
-        planesOnCurve = new Dictionary<int, GameObject>();
-        int i = 1;
+        planesOnCurve = new List<GameObject>();
         foreach (Transform child in transform)
         {
             if (child.gameObject.GetComponent<EnemyPlaneScript>() != null)
             {
                 child.gameObject.GetComponent<EnemyPlaneScript>().SetAutoFire(false);
-                planesOnCurve.Add(i, child.gameObject);
+                planesOnCurve.Add(child.gameObject);
                 BezierCurveFollow bezierCurveFollow = child.gameObject.GetComponent<BezierCurveFollow>();
                 bezierCurveFollow.OnBezierFinish -= BezierCurveFollow_OnBezierFinish;
                 bezierCurveFollow.OnBezierFinish += BezierCurveFollow_OnBezierFinish;
-                child.gameObject.GetComponent<BezierCurveFollow>().SetRoutes(setOfRoutesTransform);
-                child.gameObject.GetComponent<BezierCurveFollow>().ResetVariables();
+                bezierCurveFollow.SetRoutes(setOfRoutesTransform);
+                bezierCurveFollow.ResetVariables();
             }
-            else
-            {
-                planesOnCurve.Add(i, null);
-            }
-            i++;
         }
 
-        for (int j = 1; j < planesOnCurve.Count + 1; j++)
+        for (int i = 0; i < planesOnCurve.Count; i++)
         {
             if (UnityEngine.Random.Range(0, 100f) < chanceOfShooting)
             {
-                planesOnCurve[j].GetComponent<EnemyPlaneScript>().SetAutoFire(true);
-                planesOnCurve[j].GetComponent<EnemyPlaneScript>().SetFireSpeed(3f);
+                planesOnCurve[i].GetComponent<EnemyPlaneScript>().SetAutoFire(true);
+                planesOnCurve[i].GetComponent<EnemyPlaneScript>().SetFireSpeed(3f);
             }
         }
     }
@@ -127,7 +144,7 @@ public class BezierCurveBatch : MonoBehaviour
     private IEnumerator BezierCurveRest()
     {
         batchActive = false;
-        shipCount = 1;
+        shipCount = 0;
         planeDelayTimer = 0f;
         SetUpChildren();
         yield return new WaitForSeconds(batchDelay);
